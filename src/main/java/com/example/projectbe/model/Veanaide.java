@@ -20,4 +20,5 @@ public class Veanaide {
     private String viga;
     private String lause;
     private int sagedus;
+    private boolean raporteeritud;
 }

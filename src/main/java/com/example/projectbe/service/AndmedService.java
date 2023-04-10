@@ -3,7 +3,9 @@ package com.example.projectbe.service;
 import com.example.projectbe.model.VeanaideDTO;
 import com.example.projectbe.model.repository.VeanaideRepository;
 import com.example.projectbe.service.mapper.VeanaideMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AndmedService {
@@ -19,11 +22,16 @@ public class AndmedService {
     private final VeanaideMapper veanaideMapper;
 
     public List<VeanaideDTO> getAndmed() {
-        return veanaideMapper.toDTOList(veanaideRepository.findAllByOrderBySagedusDesc());
+        return veanaideMapper.toDTOList(veanaideRepository.findAllByRaporteeritudFalseOrderBySagedusDesc());
     }
 
     public void muudaAndmed(List<VeanaideDTO> veanaideDTOList) {
         veanaideRepository.saveAll(veanaideMapper.toEntityList(veanaideDTOList));
+    }
+
+    @Transactional
+    public void raporteeri(Long id) {
+        veanaideRepository.raporteeriById(id);
     }
 
     public Map<String, String> getVigaKorrektnePaar() {
@@ -42,6 +50,9 @@ public class AndmedService {
             });
             String suurim = "";
             Integer korgeim = 0;
+            if (korrektneMituMap.keySet().size() > 1) {
+                log.info(korrektneMituMap.keySet().toString());
+            }
             for (String korrektne : korrektneMituMap.keySet()) {
                 if (korrektneMituMap.get(korrektne) > korgeim) {
                     korgeim = korrektneMituMap.get(korrektne);

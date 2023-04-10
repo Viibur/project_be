@@ -11,4 +11,5 @@ public class VeanaideDTO {
     private String viga;
     private String lause;
     private int sagedus;
+    private boolean raporteeritud;
 }
