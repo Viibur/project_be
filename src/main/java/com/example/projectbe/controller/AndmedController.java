@@ -25,13 +25,23 @@ public class AndmedController {
         andmedService.muudaAndmed(veanaideDTOList);
     }
 
+    @PostMapping(value = "/kustuta_raporteeritud")
+    public void kustutaRaporteeritud(@RequestBody List<VeanaideDTO> veanaideDTOList) {
+        andmedService.kustutaRaporteeritud(veanaideDTOList);
+    }
+
     @GetMapping(value = "/paarid")
     public Map<String, String> getVigaKorrektnePaar() {
         return andmedService.getVigaKorrektnePaar();
     }
 
-    @GetMapping(value = "raporteeri/{id}")
+    @GetMapping(value = "/raporteeri/{id}")
     public void raporteeri(@PathVariable("id") int id) {
         andmedService.raporteeri(Integer.toUnsignedLong(id));
+    }
+
+    @GetMapping(value = "/raporteeritud")
+    public List<VeanaideDTO> raporteeritud() {
+        return andmedService.getRaporteeritud();
     }
 }

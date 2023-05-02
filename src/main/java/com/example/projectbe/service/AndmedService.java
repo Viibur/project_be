@@ -34,7 +34,7 @@ public class AndmedService {
         veanaideRepository.raporteeriById(id);
     }
 
-    public Map<String, String> getVigaKorrektnePaar() {
+    public Map<String, String>  getVigaKorrektnePaar() {
         List<VeanaideDTO> veanaited = getAndmed();
         Map<String, List<VeanaideDTO>> vigaVeanaideDTOListMap = veanaited.stream().collect(Collectors.groupingBy(VeanaideDTO::getViga));
         Map<String, String> vigaKorrektneMap = new HashMap<>();
@@ -50,9 +50,6 @@ public class AndmedService {
             });
             String suurim = "";
             Integer korgeim = 0;
-            if (korrektneMituMap.keySet().size() > 1) {
-                log.info(korrektneMituMap.keySet().toString());
-            }
             for (String korrektne : korrektneMituMap.keySet()) {
                 if (korrektneMituMap.get(korrektne) > korgeim) {
                     korgeim = korrektneMituMap.get(korrektne);
@@ -61,6 +58,18 @@ public class AndmedService {
             }
             vigaKorrektneMap.put(viga, suurim);
         });
+        log.info(vigaKorrektneMap.toString());
         return vigaKorrektneMap;
+    }
+
+    @Transactional
+    public void kustutaRaporteeritud(List<VeanaideDTO> veanaideDTOList) {
+        veanaideDTOList = veanaideDTOList.stream().filter(VeanaideDTO::isRaporteeritud).collect(Collectors.toList());
+        veanaideRepository.deleteAllById(veanaideDTOList.stream().map(VeanaideDTO::getId).collect(Collectors.toList()));
+        veanaideRepository.raporteeritudToTrue();
+    }
+
+    public List<VeanaideDTO> getRaporteeritud() {
+        return veanaideMapper.toDTOList(veanaideRepository.findAllByRaporteeritudTrue());
     }
 }

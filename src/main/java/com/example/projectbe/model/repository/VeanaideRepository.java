@@ -15,4 +15,10 @@ public interface VeanaideRepository extends JpaRepository<Veanaide, Long> {
     @Modifying
     @Query("UPDATE Veanaide veanaide SET veanaide.raporteeritud = true WHERE veanaide.id = :id")
     void raporteeriById(Long id);
+
+    List<Veanaide> findAllByRaporteeritudTrue();
+
+    @Modifying
+    @Query("UPDATE Veanaide veanaide SET veanaide.raporteeritud = false")
+    void raporteeritudToTrue();
 }
